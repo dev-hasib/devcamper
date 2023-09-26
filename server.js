@@ -9,7 +9,9 @@ const logger = require('./middleware/logger');
 const app = express();
 
 app.use(logger);
+app.use(express.json());
 app.use('/api/v1/bootcamp/', bootCamp);
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
