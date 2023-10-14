@@ -2,6 +2,7 @@ const BootcampModel = require('../models/Bootcamp');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../utils/async');
 const geocoder = require('../utils/geocoder');
+const Course = require('../models/Course');
 
 /**
  * @description Get all bootcamp
@@ -23,13 +24,15 @@ const getBootCamps = asyncHandler(async (req, res, next) => {
 	let queryStr = JSON.stringify(reqQuery);
 
 	//Create operator for Mongo's query string
-	let makeMongoQueryStr = queryStr.replace(
+	let createMongoQueryStr = queryStr.replace(
 		/\b(gt|gte|lt|lte|in)\b/g,
 		(match) => `$${match}`
 	);
 
 	// Finding resources in DB
-	query = BootcampModel.find(JSON.parse(makeMongoQueryStr));
+	query = BootcampModel.find(JSON.parse(createMongoQueryStr)).populate({
+		path: 'courses',
+	});
 
 	// Select fields
 	if (req.query.select) {
@@ -70,8 +73,9 @@ const getBootCamps = asyncHandler(async (req, res, next) => {
 	}
 	res.status(200).json({
 		success: true,
+		resultCount: bootCamps.length,
+		url: `${req.protocol}://${req.hostname}:${process.env.PORT}${req.originalUrl}`,
 		pagination,
-		result: bootCamps.length,
 		msg: `this is the root ${req.url} of this application`,
 		bootCamps,
 	});
@@ -83,7 +87,26 @@ const getBootCamps = asyncHandler(async (req, res, next) => {
  * @access privet
  */
 const getBootCamp = asyncHandler(async (req, res, next) => {
-	const bootCamp = await BootcampModel.findById(req.params.id);
+	let query = { ...req.query };
+	let data;
+	// remove query from the query string
+	const removeQuery = ['select'];
+
+	// Delete query from the query string
+	removeQuery.forEach((pram) => delete query[pram]);
+
+	// finding resource in db
+	data = BootcampModel.findById(req.params.id).populate({
+		path: 'courses',
+	});
+
+	if (req.query.select) {
+		const field = req.query.select.split(',').join(' ');
+		data.select(field);
+	}
+
+	const bootCamp = await data;
+
 	if (!bootCamp) {
 		next(
 			new ErrorResponse(
@@ -142,17 +165,24 @@ const updateBootCamp = asyncHandler(async (req, res, next) => {
  * @route DELETE api/v1/bootcamp/:id
  * @access privet
  */
-const deleteBootCamp = asyncHandler(async (req, res, next) => {
-	const bootCamp = await BootcampModel.findByIdAndDelete(req.params.id);
+const deleteBootCamp = asyncHandler(async function (req, res, next) {
+	const bootCamp = await BootcampModel.findOne({
+		_id: req.params.id,
+	});
+
 	if (!bootCamp) {
 		res.status(400).json({
 			success: false,
 			data: null,
 		});
 	}
+
+	await bootCamp.deleteOne();
+	await Course.deleteMany({ bootcamp: bootCamp._id });
+
 	res.status(200).json({
 		success: true,
-		data: {},
+		data: { bootCamp },
 	});
 });
 

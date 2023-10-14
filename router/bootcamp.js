@@ -10,7 +10,12 @@ const {
 	getBootcampInRadius,
 } = require('../controllers/bootcamps');
 
+const { getCourse } = require('../controllers/course');
+
 const router = express.Router();
+
+router.route('/:bootcampId/course').get(getCourse);
+
 // CRUD operations routes
 router.route('/').get(getBootCamps).post(createBootCamp);
 router
