@@ -1,9 +1,9 @@
 const ErrorResponse = require('../utils/errorResponse');
 
-const errorHandler = (err, req, res, next) => {
-	console.log(err.name);
+const errorHandler = (err, _req, res, _next) => {
 	let error = { ...err };
 	error.message = err.message;
+	console.log(err);
 
 	// mongoose CastError for the bad ObjectID
 	if (err.name === 'CastError') {
