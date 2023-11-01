@@ -9,8 +9,10 @@ const {
 const Course = require('../models/Course');
 const advancedResult = require('../middleware/advancedResult');
 const { protect, authorized } = require('../middleware/auth');
+const xssProtection = require('../middleware/xss-protect');
 
 const router = express.Router();
+router.use(xssProtection);
 //this rout is get all courses for the bootcamp
 router.route('/').get(
 	advancedResult(Course, {

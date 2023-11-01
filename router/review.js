@@ -8,8 +8,10 @@ const {
 const ReviewModel = require('../models/Review');
 const advancedResult = require('../middleware/advancedResult');
 const { protect, authorized } = require('../middleware/auth');
+const xssProtection = require('../middleware/xss-protect');
 
 const router = express.Router();
+router.use(xssProtection);
 //this rout is get all reviews for bootcamp
 router.route('/:bootcampId/reviews').get(
 	advancedResult(ReviewModel, {

@@ -3,7 +3,6 @@ const BootcampModel = require('../models/Bootcamp');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../utils/async');
 
-
 /**
  * @description Get courses
  * @method GET
@@ -55,6 +54,7 @@ const getCourse = asyncHandler(async (req, res, next) => {
  * @route1 api/v1/course/:bootcampId/course
  * @access Privet
  */
+
 const createCourse = asyncHandler(async (req, res, next) => {
 	req.body.bootcamp = req.params.bootcampId;
 	req.body.user = req.user.id;

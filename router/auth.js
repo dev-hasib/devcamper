@@ -10,7 +10,9 @@ const {
 	resetPassword,
 } = require('../controllers/auth');
 const { protect } = require('../middleware/auth');
+const xssProtection = require('../middleware/xss-protect');
 
+router.use(xssProtection);
 router.route('/register').post(registerUser);
 router.route('/login').post(loginUser);
 router.route('/logout').get(protect, logoutUser);

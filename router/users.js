@@ -10,9 +10,11 @@ const {
 //authentication middleware
 const { protect, authorized } = require('../middleware/auth');
 const advancedResult = require('../middleware/advancedResult');
+const xssProtection = require('../middleware/xss-protect');
 
 router.use(protect);
 router.use(authorized('admin'));
+router.use(xssProtection);
 
 router.route('/').get(advancedResult(userModel), getUsers).post(createUser);
 

@@ -18,6 +18,9 @@ const { getAllReviews, addReviews } = require('../controllers/review');
 //authentication middleware
 const { protect, authorized } = require('../middleware/auth');
 const advancedResult = require('../middleware/advancedResult');
+const xssProtection = require('../middleware/xss-protect');
+//xss attack protection
+router.use(xssProtection);
 
 router.route('/:bootcampId/course').get(getCourse);
 

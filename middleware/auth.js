@@ -13,14 +13,13 @@ const protect = asyncHandler(async (req, _res, next) => {
 	let token;
 
 	// Check for token in Authorization header
-	if (
-		req.headers.authorization &&
-		req.headers.authorization.startsWith('Bearer')
-	) {
-		token = req.headers.authorization.split(' ')[1];
-	}
-	// If no token in Authorization header, check for token in cookies
-	else if (req.cookies.token) {
+	// if (
+	// 	req.headers.authorization &&
+	// 	req.headers.authorization.startsWith('Bearer')
+	// ) {
+	// 	token = req.headers.authorization.split(' ')[1];
+	// } else
+	if (req.cookies.token) {
 		token = req.cookies.token;
 	}
 
