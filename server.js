@@ -16,6 +16,8 @@ const errorHandler = require('./middleware/error');
 const bootCamp = require('./router/bootcamp');
 const course = require('./router/course');
 const auth = require('./router/auth');
+const users = require('./router/users');
+const review = require('./router/review');
 
 const app = express();
 
@@ -24,10 +26,13 @@ app.use(express.json());
 app.use(expressFileUpload());
 app.use(cookieParser());
 
-// api routers
+// mount all api routers
 app.use('/api/v1/bootcamp', bootCamp);
 app.use('/api/v1/course', course);
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/auth/users', users);
+app.use('/api/v1/reviews', review);
+
 
 //custom middlewares
 app.use(logger);

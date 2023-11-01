@@ -1,6 +1,8 @@
 const express = require('express');
 
 // local module
+const router = express.Router();
+const Bootcamp = require('../models/Bootcamp');
 const {
 	getBootCamp,
 	getBootCamps,
@@ -10,17 +12,20 @@ const {
 	getBootcampInRadius,
 	uploadBootcampPhoto,
 } = require('../controllers/bootcamps');
-const Bootcamp = require('../models/Bootcamp');
-const advancedResult = require('../middleware/advancedResult');
+const { getCourse } = require('../controllers/course');
+const { getAllReviews, addReviews } = require('../controllers/review');
 
 //authentication middleware
 const { protect, authorized } = require('../middleware/auth');
-
-const { getCourse } = require('../controllers/course');
-
-const router = express.Router();
+const advancedResult = require('../middleware/advancedResult');
 
 router.route('/:bootcampId/course').get(getCourse);
+
+//Reviews routes that depend on bootcamp model
+router.route('/:bootcampId/reviews').get(getAllReviews);
+router
+	.route('/:bootcampId/reviews')
+	.post(protect, authorized('user', 'admin'), addReviews);
 
 // CRUD operations routes
 router

@@ -143,6 +143,13 @@ BootcampSchema.virtual('courses', {
 	justOne: false,
 });
 
+// //populate virtual
+// BootcampSchema.virtual('reviews', {
+// 	ref: 'Review',
+// 	localField: '_id',
+// 	foreignField: 'bootcamp',
+// 	justOne: false,
+// });
 
 
 const BootcampModel = model('Bootcamp', BootcampSchema);

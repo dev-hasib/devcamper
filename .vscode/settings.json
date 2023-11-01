@@ -1,4 +1,12 @@
 {
 	"cSpell.ignoreWords": ["bootcamp"],
-	"cSpell.words": ["bootcamps", "fileupload", "zipcode"]
+	"cSpell.words": [
+		"bootcamps",
+		"fileupload",
+		"forgotpassword",
+		"maxlength",
+		"resettoken",
+		"updatepassword",
+		"zipcode"
+	]
 }

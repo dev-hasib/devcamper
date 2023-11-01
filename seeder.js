@@ -7,9 +7,11 @@ const mongoose = require('mongoose');
 const Bootcamp = require('./models/Bootcamp');
 const Course = require('./models/Course');
 const User = require('./models/User');
+const ReviewModel = require('./models/Review');
+const { hashPassword } = require('./utils/hash');
 
 //Connect to MongoDB
-const connect = mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI, {
 	useNewUrlParser: true,
 });
 
@@ -27,12 +29,18 @@ const users = JSON.parse(
 	fs.readFileSync(__dirname + '/_data/users.json', 'utf-8')
 );
 
+//read json file of course
+const reviews = JSON.parse(
+	fs.readFileSync(__dirname + '/_data/reviews.json', 'utf-8')
+);
+users.forEach((user) => (user.password = hashPassword(user.password)));
 //import bootcamp in MongoDB
 const importData = async () => {
 	try {
 		await Bootcamp.create(bootcamp);
 		await Course.create(course);
 		await User.create(users);
+		await ReviewModel.create(reviews);
 
 		console.log('Data created successfully!'.bgGreen.black);
 		process.exit();
@@ -47,6 +55,7 @@ const deleteBootcamp = async () => {
 		await Bootcamp.deleteMany();
 		await Course.deleteMany();
 		await User.deleteMany();
+		await ReviewModel.deleteMany();
 
 		console.log('Data deleted successfully!'.bgRed.white);
 		process.exit();
